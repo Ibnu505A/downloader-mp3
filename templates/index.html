@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="Download MP3 dari YouTube dengan mudah dan cepat. Gratis, aman, dan kualitas tinggi.">
+    <meta name="keywords" content="youtube, mp3, download, music, audio, converter">
+    <meta name="author" content="YouTube to MP3 Downloader">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="YouTube to MP3">
+
+    <title>YouTube to MP3 Downloader</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3rem;
+            color: #ff0000;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .url-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .download-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-container {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .features {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .feature i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .feature h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .files-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .file-item {
+            background: #f8f9fa;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .file-download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .file-download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 30px;
+            }
+
+            .url-input {
+                font-size: 16px;
+                /* Prevent zoom on iOS */
+                padding: 12px 16px;
+            }
+
+            .download-btn {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .feature {
+                padding: 15px;
+            }
+
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .file-download-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                margin: 5px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fab fa-youtube"></i>
+        </div>
+
+        <h1>YouTube to MP3</h1>
+        <p class="subtitle">Download musik dari YouTube dengan mudah dan cepat</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form id="downloadForm">
+            <div class="form-group">
+                <input type="url" class="url-input" id="urlInput" placeholder="Masukkan URL YouTube di sini..."
+                    required>
+            </div>
+            <button type="submit" class="download-btn" id="downloadBtn">
+                <i class="fas fa-download"></i>
+                Download MP3
+            </button>
+        </form>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Mempersiapkan download...</div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-music"></i>
+                <h3>Kualitas Tinggi</h3>
+                <p>MP3 192kbps</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-bolt"></i>
+                <h3>Cepat</h3>
+                <p>Download super cepat</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Aman</h3>
+                <p>100% aman & gratis</p>
+            </div>
+        </div>
+
+        <div class="downloads-section" id="downloadsSection" style="margin-top: 40px; display: none;">
+            <h2 style="color: #333; margin-bottom: 20px;">
+                <i class="fas fa-folder-open"></i> File yang Sudah Didownload
+            </h2>
+            <div id="filesList" class="files-list">
+                <!-- Files will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('downloadForm');
+        const urlInput = document.getElementById('urlInput');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const url = urlInput.value.trim();
+            if (!url) return;
+
+            // Disable form
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            progressContainer.style.display = 'block';
+
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `url=${encodeURIComponent(url)}`
+                });
+
+                const data = await response.json();
+
+                if (data.download_id) {
+                    // Start polling for progress
+                    pollProgress(data.download_id);
+                } else {
+                    throw new Error('Gagal memulai download');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+                resetForm();
+            }
+        });
+
+        function pollProgress(downloadId) {
+            const interval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/progress/${downloadId}`);
+                    const progress = await response.json();
+
+                    if (progress.status === 'downloading') {
+                        progressFill.style.width = progress.percent + '%';
+                        progressText.textContent = `Downloading... ${progress.percent}%`;
+                    } else if (progress.status === 'finished' || progress.status === 'completed') {
+                        progressFill.style.width = '100%';
+                        progressText.textContent = 'Download selesai! File siap diunduh.';
+                        clearInterval(interval);
+
+                        // Otomatis download file jika ada download_url
+                        if (progress.download_url) {
+                            progressText.textContent = `File ${progress.filename} sedang didownload...`;
+
+                            // Langsung download file tanpa perlu klik tombol
+                            setTimeout(() => {
+                                const link = document.createElement('a');
+                                link.href = progress.download_url;
+                                link.download = progress.filename;
+                                link.style.display = 'none';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+
+                                progressText.textContent = `File ${progress.filename} berhasil didownload!`;
+                            }, 1000);
+                        } else {
+                            progressText.textContent = 'Download selesai!';
+                        }
+
+                        setTimeout(() => {
+                            resetForm();
+                        }, 5000);
+                    } else if (progress.status === 'error') {
+                        progressText.textContent = 'Error: ' + progress.error;
+                        clearInterval(interval);
+                        resetForm();
+                    }
+                } catch (error) {
+                    console.error('Error polling progress:', error);
+                    clearInterval(interval);
+                    resetForm();
+                }
+            }, 1000);
+        }
+
+        function resetForm() {
+            downloadBtn.disabled = false;
+            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download MP3';
+            progressContainer.style.display = 'none';
+            progressFill.style.width = '0%';
+            urlInput.value = '';
+            loadFilesList(); // Reload file list setelah download selesai
+        }
+
+        // Load files list
+        async function loadFilesList() {
+            try {
+                const response = await fetch('/list_files');
+                const files = await response.json();
+
+                const filesList = document.getElementById('filesList');
+                const downloadsSection = document.getElementById('downloadsSection');
+
+                if (files.length > 0) {
+                    downloadsSection.style.display = 'block';
+                    filesList.innerHTML = files.map(file => `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <div class="file-name">${file.filename}</div>
+                                <div class="file-size">${formatFileSize(file.size)}</div>
+                            </div>
+                            <button class="file-download-btn" onclick="downloadFile('${file.download_url}', '${file.filename}')">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    `).join('');
+                } else {
+                    downloadsSection.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading files:', error);
+            }
+        }
+
+        function downloadFile(url, filename) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Load files list when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            loadFilesList();
+        });
+    </script>
+</body>
+
+</html>
